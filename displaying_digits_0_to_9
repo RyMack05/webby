@@ -1,0 +1,42 @@
+// 7-segment single digit, Common Cathode (HIGH = ON)
+// Wiring assumed: a,b,c,d,e,f,g -> D2..D8 (through 220Ω)
+// If your order is different, edit segPins below.
+// If your module is Common Anode, set COMMON_ANODE = true.
+
+const bool COMMON_ANODE = false;             // <- change to true for CA
+
+const int segPins[7] = {2,3,4,5,6,7,8};      // a,b,c,d,e,f,g
+
+// segment patterns for digits 0..9 (a..g)
+const byte DIGITS[10][7] = {
+//  a b c d e f g
+  {1,1,1,1,1,1,0}, // 0
+  {0,1,1,0,0,0,0}, // 1
+  {1,1,0,1,1,0,1}, // 2
+  {1,1,1,1,0,0,1}, // 3
+  {0,1,1,0,0,1,1}, // 4
+  {1,0,1,1,0,1,1}, // 5
+  {1,0,1,1,1,1,1}, // 6
+  {1,1,1,0,0,0,0}, // 7
+  {1,1,1,1,1,1,1}, // 8
+  {1,1,1,1,0,1,1}  // 9
+};
+
+void setup() {
+  for (int i = 0; i < 7; i++) pinMode(segPins[i], OUTPUT);
+}
+
+void showDigit(int n) {
+  for (int s = 0; s < 7; s++) {
+    int val = DIGITS[n][s];
+    if (COMMON_ANODE) val = !val;           // invert for CA
+    digitalWrite(segPins[s], val);
+  }
+}
+
+void loop() {
+  for (int n = 0; n <= 9; n++) {
+    showDigit(n);
+    delay(1000);                            // 1 second between numbers
+  }
+}
